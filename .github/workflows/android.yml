@@ -41,7 +41,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install "cython<3.0"
         pip install buildozer==1.4.0
-        pip install python-for-android==2023.06.25
+        pip install python-for-android==2023.5.21
 
     # ---------------- ENV FIXES ----------------
     - name: Force compatible Android NDK
