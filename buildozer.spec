@@ -30,7 +30,7 @@ android.enable_androidx = True
 android.use_androidx = True
 
 # --- Python-for-Android ---
-p4a.branch = master
+p4a.branch = stable
 
 # --- App behavior ---
 android.allow_backup = True
@@ -44,4 +44,5 @@ android.manifest_placeholders = applicationName=org.kivy.android.PythonApplicati
 [buildozer]
 log_level = 2
 warn_on_root = 1
+
 
