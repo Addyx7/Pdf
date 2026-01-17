@@ -40,13 +40,21 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install "cython<3.0"
-        pip install buildozer
+        pip install buildozer==1.5.0
+        pip install python-for-android==2023.09.16
 
     # ---------------- ENV FIXES ----------------
     - name: Force compatible Android NDK
       run: |
         echo "ANDROID_NDK_HOME=$HOME/.buildozer/android/platform/android-ndk-r25b" >> $GITHUB_ENV
         echo "ANDROIDSDK=$HOME/.buildozer/android/platform/android-sdk" >> $GITHUB_ENV
+
+
+
+    - name: Clean buildozer cache
+      run: |
+        rm -rf ~/.buildozer
+        buildozer android clean
 
     # ---------------- BUILD ----------------
     - name: Build APK
