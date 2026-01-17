@@ -51,10 +51,11 @@ jobs:
 
 
 
-    - name: Clean buildozer cache
+    - name: Remove old buildozer cache
       run: |
-        rm -rf ~/.buildozer
-        buildozer android clean
+       rm -rf ~/.buildozer
+       rm -rf .buildozer
+
 
     # ---------------- BUILD ----------------
     - name: Build APK
