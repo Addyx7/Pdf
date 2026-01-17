@@ -9,7 +9,7 @@ source.include_exts = py,png,jpg,jpeg,kv,atlas
 version = 1.0.0
 
 # --- Python requirements ---
-requirements = python3,kivy,android,jnius,requests
+requirements = python3,kivy,android,pyjnius==1.5.0,requests
 
 # --- Android permissions ---
 android.permissions = INTERNET, READ_EXTERNAL_STORAGE
@@ -44,3 +44,4 @@ android.manifest_placeholders = applicationName=org.kivy.android.PythonApplicati
 [buildozer]
 log_level = 2
 warn_on_root = 1
+
