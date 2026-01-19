@@ -13,15 +13,20 @@ jobs:
           docker run --rm -v "$PWD":/workspace -w /workspace kivy/buildozer:latest bash -c "cat > /tmp/run_buildozer.py <<'EOF'
           import sys
           import builtins
+          
           def auto_yes(prompt=''):
               if prompt:
                   print(prompt + 'y', flush=True)
               return 'y'
+          
           builtins.input = auto_yes
+          
+          sys.argv = ['buildozer', 'android', 'debug']
+          
           from buildozer.scripts.client import main
           sys.exit(main())
           EOF
-          python3 /tmp/run_buildozer.py android debug"
+          python3 /tmp/run_buildozer.py"
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
