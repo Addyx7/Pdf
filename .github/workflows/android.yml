@@ -8,32 +8,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Build APK (Docker ONLY)
+      - name: Build APK with Buildozer
         run: |
           docker run --rm \
             -v "$PWD":/workspace \
             -w /workspace \
             kivy/buildozer:latest \
-            bash -c "
-              python3 << 'PYTHON_SCRIPT'
+            bash -c '
+            # Create a Python script to patch input() globally
+            cat > /tmp/run_buildozer.py << "PYEOF"
 import sys
 import builtins
 
-# Override input to always return 'y'
-original_input = builtins.input
-def mock_input(prompt=''):
-    print(prompt + 'y')
-    return 'y'
-builtins.input = mock_input
+# Monkey-patch input to always return "y"
+def auto_yes(prompt=""):
+    if prompt:
+        print(prompt + "y", flush=True)
+    return "y"
 
-# Now run buildozer
-import subprocess
-sys.exit(subprocess.call(['buildozer', 'android', 'debug']))
-PYTHON_SCRIPT
-            "
+builtins.input = auto_yes
+
+# Import and run buildozer main
+from buildozer.scripts.client import main
+sys.exit(main())
+PYEOF
+
+            # Run the patched buildozer
+            python3 /tmp/run_buildozer.py android debug
+            '
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: apk
+          name: android-apk
           path: bin/*.apk
