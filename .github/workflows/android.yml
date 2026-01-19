@@ -14,13 +14,10 @@ jobs:
             -v "$PWD":/workspace \
             -w /workspace \
             kivy/buildozer:latest \
-            bash -c '
-            # Create a Python script to patch input() globally
-            cat > /tmp/run_buildozer.py << "PYEOF"
+            bash -c 'cat > /tmp/run_buildozer.py << EOF
 import sys
 import builtins
 
-# Monkey-patch input to always return "y"
 def auto_yes(prompt=""):
     if prompt:
         print(prompt + "y", flush=True)
@@ -28,14 +25,11 @@ def auto_yes(prompt=""):
 
 builtins.input = auto_yes
 
-# Import and run buildozer main
 from buildozer.scripts.client import main
 sys.exit(main())
-PYEOF
+EOF
 
-            # Run the patched buildozer
-            python3 /tmp/run_buildozer.py android debug
-            '
+python3 /tmp/run_buildozer.py android debug'
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
