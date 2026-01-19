@@ -1,0 +1,104 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          ccache \
+          git \
+          libffi-dev \
+          libltdl-dev \
+          libssl-dev \
+          openjdk-17-jdk \
+          unzip \
+          zip \
+          zlib1g-dev
+
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
+    - name: Install Android SDK components
+      run: |
+        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0" "ndk;25.1.8937393"
+
+    - name: Install Buildozer
+      run: |
+        pip install --upgrade pip
+        pip install buildozer cython
+
+    - name: Cache Buildozer
+      uses: actions/cache@v3
+      with:
+        path: |
+          .buildozer
+          ~/.buildozer
+        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+
+    - name: Create buildozer.spec if not exists
+      run: |
+        if [ ! -f buildozer.spec ]; then
+          cat > buildozer.spec << 'EOF'
+        [app]
+        title = PDF Viewer
+        package.name = pdfviewer
+        package.domain = com.yourapp
+
+        source.dir = .
+        source.include_exts = py,png,jpg,kv,atlas
+
+        version = 0.1
+
+        requirements = python3,kivy,requests,jnius
+
+        orientation = portrait
+        fullscreen = 0
+
+        android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
+        android.api = 33
+        android.minapi = 21
+        android.ndk = 25b
+        android.accept_sdk_license = True
+        android.arch = armeabi-v7a
+
+        [buildozer]
+        log_level = 2
+        warn_on_root = 1
+        EOF
+        fi
+
+    - name: Build with Buildozer
+      run: |
+        buildozer android debug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: pdf-viewer-apk
+        path: bin/*.apk
