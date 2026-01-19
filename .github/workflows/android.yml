@@ -9,16 +9,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Build APK (Buildozer Docker)
+      - name: Build APK (Buildozer, non-root)
         run: |
           docker run --rm \
             -v "$PWD":/home/user/app \
+            -w /home/user/app \
             kivy/buildozer:latest \
             bash -c "
-              cd /home/user/app &&
-              yes y | buildozer android debug
+              useradd -m builder || true
+              chown -R builder:builder /home/user
+              su builder -c 'buildozer android debug'
             "
 
       - name: Upload APK
