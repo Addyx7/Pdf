@@ -12,22 +12,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build APK (NO ROOT, NO PERMISSION ERRORS)
+      - name: Build APK (OFFICIAL CI METHOD)
         run: |
           docker run --rm \
-            --entrypoint /bin/bash \
-            --user 1000:1000 \
+            -e BUILDOZER_ALLOW_ROOT=1 \
             -e HOME=/workspace \
             -v "$PWD":/workspace \
             -w /workspace \
             kivy/buildozer:latest \
-            -c "
-              mkdir -p .buildozer .android .cache &&
-              buildozer android debug
-            "
+            buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: pdfviewer-apk
+          name: apk
           path: bin/*.apk
