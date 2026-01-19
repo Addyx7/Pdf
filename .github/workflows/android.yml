@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Android APK
 
 on:
   push:
@@ -9,18 +9,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Build APK (OFFICIAL CI METHOD)
+      - name: Build APK (Docker – NO PROMPT)
         run: |
           docker run --rm \
             -e BUILDOZER_ALLOW_ROOT=1 \
+            -e BUILDOZER_DISABLE_ROOT_WARNING=1 \
             -e HOME=/workspace \
             -v "$PWD":/workspace \
             -w /workspace \
             kivy/buildozer:latest \
-            buildozer android debug
+            buildozer android debug --allow-root
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
