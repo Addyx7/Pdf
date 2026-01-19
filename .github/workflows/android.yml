@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build APK (Docker – NO PROMPT)
+      - name: Build APK (Docker ONLY)
         run: |
           docker run --rm \
             -e BUILDOZER_ALLOW_ROOT=1 \
