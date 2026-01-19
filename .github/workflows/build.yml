@@ -36,13 +36,13 @@ jobs:
           zlib1g-dev
 
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: '17'
 
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
+      uses: android-actions/setup-android@v3
 
     - name: Install Android SDK components
       run: |
@@ -54,7 +54,7 @@ jobs:
         pip install buildozer cython
 
     - name: Cache Buildozer
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           .buildozer
@@ -98,7 +98,7 @@ jobs:
         buildozer android debug
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: pdf-viewer-apk
         path: bin/*.apk
