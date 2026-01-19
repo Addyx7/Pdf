@@ -1,21 +1,19 @@
 [app]
-title = PDFGuard
-package.name = pdfguard
-package.domain = org.test
+title = PDF Viewer
+package.name = pdfviewer
+package.domain = com.example
 source.dir = .
-source.include_exts = py,png,jpg,kv,atlas
-version = 1.0
+source.include_exts = py
+version = 1.0.0
 
-requirements = python3,kivy,jnius,requests
+requirements = python3,kivy,requests,pyjnius
+orientation = portrait
+fullscreen = 0
 
-android.api = 33
-android.minapi = 21
-android.ndk = 25b
-android.build_tools_version = 33.0.0
 android.permissions = INTERNET,READ_EXTERNAL_STORAGE,WRITE_EXTERNAL_STORAGE
-android.archs = arm64-v8a,armeabi-v7a
-android.release_artifact = apk
-p4a.branch = stable
+android.api = 33
+android.minapi = 24
+android.gradle_dependencies = androidx.core:core:1.12.0
 
-log_level = 2
-warn_on_root = 1
+android.manifest_placeholders = applicationId=com.example.pdfviewer
+android.add_src = android
