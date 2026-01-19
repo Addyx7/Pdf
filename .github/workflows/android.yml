@@ -1,4 +1,4 @@
-name: Android APK
+name: Build Android APK
 
 on:
   push:
@@ -9,14 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Build APK
-        uses: kivy/buildozer-action@v1
-        with:
-          command: buildozer android debug
+      - name: Build APK using Buildozer Docker
+        run: |
+          docker run --rm \
+            -v "$PWD":/home/user/app \
+            kivy/buildozer:latest \
+            bash -c "
+              cd /home/user/app &&
+              buildozer android debug
+            "
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
-          name: apk
+          name: pdfviewer-apk
           path: bin/*.apk
