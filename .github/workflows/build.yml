@@ -46,7 +46,8 @@ jobs:
 
     - name: Install Android SDK components
       run: |
-        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0" "ndk;25.1.8937393"
+        yes | sdkmanager --licenses
+        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;25.1.8937393"
 
     - name: Install Buildozer
       run: |
@@ -86,6 +87,9 @@ jobs:
         android.ndk = 25b
         android.accept_sdk_license = True
         android.arch = armeabi-v7a
+        android.skip_update = False
+        android.sdk_path = /home/runner/.buildozer/android/platform/android-sdk
+        android.ndk_path = /home/runner/.buildozer/android/platform/android-ndk
 
         [buildozer]
         log_level = 2
