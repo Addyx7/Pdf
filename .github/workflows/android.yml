@@ -12,17 +12,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build APK (NO ROOT, ENTRYPOINT FIXED)
+      - name: Build APK (NO ROOT, NO PERMISSION ERRORS)
         run: |
           docker run --rm \
             --entrypoint /bin/bash \
             --user 1000:1000 \
-            -e HOME=/home/user \
-            -v "$PWD":/home/user/app \
-            -w /home/user/app \
+            -e HOME=/workspace \
+            -v "$PWD":/workspace \
+            -w /workspace \
             kivy/buildozer:latest \
             -c "
-              mkdir -p /home/user/.buildozer /home/user/.android /home/user/.cache &&
+              mkdir -p .buildozer .android .cache &&
               buildozer android debug
             "
 
